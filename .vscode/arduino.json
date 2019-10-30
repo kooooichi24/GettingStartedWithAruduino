@@ -1,6 +1,6 @@
 {
     "port": "/dev/cu.usbmodem14101",
     "board": "arduino:avr:uno",
-    "sketch": "BlinkingLED.ino",
-    "output": "../ArduinoOutput"
+    "sketch": "PushButtonControl/PushButtonControl.ino",
+    "output": "./PushButtonControl/build"
 }

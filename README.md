@@ -1,0 +1,2 @@
+NOTE: When executing a sketch using Visual Studio Code, change the sketch and output values in .vscode/arduino.json to the correct PATH each time.
+(uploadしても毎回自動でsketch valueが変更されないことによる，実行errorを回避するため)
