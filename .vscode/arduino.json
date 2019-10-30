@@ -1,6 +1,6 @@
 {
     "port": "/dev/cu.usbmodem14101",
     "board": "arduino:avr:uno",
-    "sketch": "PushButtonControl/PushButtonControl.ino",
-    "output": "./PushButtonControl/build"
+    "sketch": "Example03C/Example03C.ino",
+    "output": "./Example03C/build"
 }
