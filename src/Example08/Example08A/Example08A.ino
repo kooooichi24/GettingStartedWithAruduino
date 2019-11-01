@@ -1,12 +1,16 @@
 // Example08A: Arduinoネットワークランプ
 
 import processing.serial.*;
+import java.net.*;
+import java.io.*;
+import java.util.*;
 
-// 図書のホームページが見つからないため，xml+ホームページで検索して一番上位のxmlページを利用する．
-String feed = "http://www.xmlmaster.org/murata/index.xml";
+// 図書のホームページが見つからないため，変更した．
+String feed = "https://blog.arduino.cc/feed/";
 
 int interval = 10; // フィードを取得する時間
 int lastTime;
+int n;
 
 Serial port;
 color c;
@@ -14,15 +18,15 @@ String cs;
 
 int light = 0;
 
-int love = 0;
-int peace = 0;
+int window = 0;
+int make = 0;
 int arduino = 0;
 
 String buffer = ""; // arduinoから送られてきた文字を溜めるところ
 
 void setup() {
   size(640, 480);
-  frameRate(10);
+  frameRate(5);
 
   PFont font = loadFont("HelveticaNeue-Bold-32.vlw");
   fill(255);
@@ -43,10 +47,10 @@ void setup() {
 
 void draw() {
   background(c);
-  int n = (interval - (millis()-lastTime)/1000);
+  n = (interval - (millis()-lastTime)/1000);
 
   // 3つの値を基に色を組み立てる
-  c = color(love, peace, arduino);
+  c = color(make, window, arduino);
   cs = "#" + hex(c, 6);
 
   displayBasicInfo();
@@ -57,7 +61,7 @@ void draw() {
   }
 
   // Arduinoへデータを送る
-  port.write("cs");
+  port.write(cs);
 
   // データが待っているかチェック
   if (port.available() > 0) {
@@ -93,15 +97,15 @@ void displayBasicInfo() {
   text("Reading feed:", 10, 100);
   text(feed, 10, 140);
 
-  text("Next update in " + "xxx" + " seconds", 10, 450);
+  text("Next update in " + n + " seconds", 10, 450);
   
-  text("peace", 10, 200);
-  text(" " + peace, 130, 200);
-  rect(200, 172, peace, 28);
+  text("make", 10, 200);
+  text(" " + make, 130, 200);
+  rect(200, 172, make, 28);
 
-  text("love ", 10, 240);
-  text(" " + love, 130, 240);
-  rect(200, 212, love, 28);
+  text("window ", 10, 240);
+  text(" " + window, 130, 240);
+  rect(200, 212, window, 28);
 
   text("arduino", 10, 280);
   text(" " + arduino, 130, 280);
@@ -120,8 +124,8 @@ void fetchData() {
   String chunk;
 
   // カウンタをゼロに
-  love = 0;
-  peace = 0;
+  make = 0;
+  window = 0;
   arduino = 0;
 
   try {
@@ -131,7 +135,7 @@ void fetchData() {
 
     // 接続先からやってくるデータを1行ずつバッファするための
     // 仮想的なパイプ
-    BufferReader in = new BufferReader(new InputStreamReader(conn.getInputStream()));
+    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
     // フィードを1行ずつ読む
     while ((data = in.readLine()) != null) {
@@ -140,22 +144,25 @@ void fetchData() {
       while (st.hasMoreTokens()) {
         chunk = st.nextToken().toLowerCase(); // 小文字に変換
 
-        if (chunk.indexOf("love")) love++;
-        if (chunk.indexOf("peace")) peace++;
-        if (chunk.indexOf("arduino")) arduino++;
+        if (chunk.indexOf("make") >= 0) make++;
+        if (chunk.indexOf("window") >= 0) window++;
+        if (chunk.indexOf("arduino") >= 0) arduino++;
       }
     }
 
     // 各語を参照した回数の64を上限とする
-    if (peace > 64) peace = 64;
-    if (love > 64) love = 64;
+    if (make > 64) make = 64;
+    if (window > 64) window = 64;
     if (arduino > 64) arduino = 64;
 
     // 4を掛けて最大値を255にしておくと
     // 色を4byteで表現するのに便利
-    // ↑4byteとはRGBAのことかな？？
-    peace *= 4;
-    love *= 4;
+    //   ↑4byteとはRGBAのことかな？？
+    //   でもでも，hex(c,6)で6桁にしてるのに4byte???
+    //   わかった：color(r,g,b)にした時は，自動的にa=1となる．
+    //           そのため，AAAAAAAARRRRRRRRGGGGGGGGBBBBBBBBの4byteとなり，その後16進数表現するためにhex()した際に6桁と指定している．(AAの2桁を含まない)
+    make *= 4;
+    window *= 4;
     arduino *= 4;
   } catch (Exception e) {
     // errorの場合はスケッチを停止．
