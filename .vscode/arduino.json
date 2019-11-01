@@ -1,6 +1,6 @@
 {
     "port": "/dev/cu.usbmodem14101",
     "board": "arduino:avr:uno",
-    "sketch": "./src/Example07/Example07.ino",
-    "output": "./src/Example07/build"
+    "sketch": "./src/Example08/Example08B/Example08B.ino",
+    "output": "./src/Example08/Example08B/build"
 }
