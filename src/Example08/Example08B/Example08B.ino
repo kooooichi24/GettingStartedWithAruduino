@@ -48,4 +48,5 @@ void loop() {
     analogWrite(G_LED, 0);
     analogWrite(B_LED, 0);
   }
+  delay(50);
 }
