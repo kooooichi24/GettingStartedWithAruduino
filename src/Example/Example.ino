@@ -1,16 +1,17 @@
-// Example: ただのExampleファイルです．
-// シリアルプロッタで2個以上のデータを表示させる
 
-const int SENSOR = 0;
-int val = 0;
+const int knockSensor = A0; // the piezo is connected to analog pin 0
+
+
+// these variables will change:
+int sensorReading = 0;      // variable to store the value read from the sensor pin
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(9600);       // use the serial port
 }
 
 void loop() {
-  val = analogRead(SENSOR);
-
-  Serial.println(val);
+  // read the sensor and store it in the variable sensorReading:
+  sensorReading = analogRead(knockSensor);
+  Serial.println(sensorReading);
   delay(10);
 }
